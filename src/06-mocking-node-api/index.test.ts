@@ -23,7 +23,7 @@ describe('doStuffByTimeout', () => {
   afterEach(() => {
     jest.clearAllTimers();
     mockedCb.mockClear();
-  })
+  });
 
   test('should set timeout with provided callback and timeout', () => {
     expect(jest.getTimerCount()).toEqual(0);
@@ -52,11 +52,11 @@ describe('doStuffByInterval', () => {
   afterAll(() => {
     jest.useRealTimers();
   });
-  
+
   afterEach(() => {
     jest.clearAllTimers();
     mockedCb.mockClear();
-  })
+  });
 
   test('should set interval with provided callback and timeout', () => {
     doStuffByInterval(mockedCb, SECOND_IN_MS);
