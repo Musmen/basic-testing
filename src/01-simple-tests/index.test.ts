@@ -39,7 +39,7 @@ describe('simpleCalculator tests', () => {
   });
 
   test('should return null for invalid arguments', () => {
-    const result = simpleCalculator({ a, b: 'abc', action: '!' });
+    const result = simpleCalculator({ a, b: 'abc', action: Action.Add });
     expect(result).toBeNull();
   });
 });
