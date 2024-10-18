@@ -1,17 +1,48 @@
-// Uncomment the code below and write your tests
-/* import {  simpleCalculator, Action } from './index';
+import { simpleCalculator, Action, RawCalculatorInput } from './index';
 
-const testCases = [
-    { a: 1, b: 2, action: Action.Add, expected: 3 },
-    { a: 2, b: 2, action: Action.Add, expected: 4 },
-    { a: 3, b: 2, action: Action.Add, expected: 5 },
-    // continue cases for other actions    
-]; */
+describe('simpleCalculator tests', () => {
+  const testCases: (RawCalculatorInput & { expected: number | null })[] = [];
+  const actions = Object.values(Action);
+  const TEST_CASES_COUNT = 100;
 
-describe('simpleCalculator', () => {
-  // This test case is just to run this test suite, remove it when you write your own tests
-  test('should blah-blah', () => {
-    expect(true).toBe(true);
-  });
-  // Consider to use Jest table tests API to test all cases above
+  for (let i = 0; i < TEST_CASES_COUNT; i++) {
+    const a = Math.round(Math.random() * 100);
+    const b = Math.round(Math.random() * 10);
+    const action = actions[Math.floor(Math.random() * actions.length)];
+    const expected = eval(
+      `${a}${action === Action.Exponentiate ? '**' : action}${b}`,
+    );
+
+    testCases.push({ a, b, action, expected });
+  }
+
+  test.each(testCases)(
+    'should calculate: $a $action $b = $expected',
+    ({ a, b, action, expected }) =>
+      expect(simpleCalculator({ a, b, action })).toBe(expected),
+  );
+
+  test.each`
+    a       | b     | action
+    ${0}    | ${5}  | ${'**'}
+    ${12}   | ${-8} | ${'!'}
+    ${132}  | ${1}  | ${'|'}
+    ${1000} | ${3}  | ${'@'}
+    ${291}  | ${77} | ${'$'}
+  `('should return null for invalid action', (arg) =>
+    expect(simpleCalculator(arg)).toBeNull(),
+  );
+
+  const testCasesIncorrectInput = [
+    { a: [0], b: 5, action: Action.Multiply },
+    { a: '12', b: -8, action: Action.Add },
+    { a: 132, b: {}, action: Action.Exponentiate },
+    { a: 1000, b: () => console.log, action: Action.Divide },
+    { a: '291', b: '77', action: Action.Subtract },
+  ];
+
+  test.each(testCasesIncorrectInput)(
+    'should return null for invalid arguments',
+    (arg) => expect(simpleCalculator(arg)).toBeNull(),
+  );
 });
