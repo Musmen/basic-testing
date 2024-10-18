@@ -4,9 +4,20 @@ import * as fsPromises from 'fs/promises';
 
 import { readFileAsynchronously, doStuffByTimeout, doStuffByInterval } from '.';
 
-jest.mock('path');
-jest.mock('fs');
-jest.mock('fs/promises');
+jest.mock('path', () => ({
+  ...jest.requireActual('path'),
+  join: jest.fn(),
+}));
+
+jest.mock('fs/promises', () => ({
+  ...jest.requireActual('fs/promises'),
+  readFile: jest.fn(),
+}));
+
+jest.mock('fs', () => ({
+  ...jest.requireActual('fs'),
+  existsSync: jest.fn(),
+}));
 
 const SECOND_IN_MS = 1000;
 const mockedCb = jest.fn();
